@@ -9,7 +9,11 @@ use matchers::{
     utils::matcher::{LeftoverString, MatchedString, Matcher, RejectedString},
 };
 use parsers::{
-    block::{container::Container, leaf::LeafCategory, Block},
+    block::{
+        container::Container,
+        leaf::{atx_heading::AtxHeadingLevel, LeafCategory},
+        Block,
+    },
     inline::{Inline, InlineCategory},
     ParseMultiple,
 };
@@ -58,6 +62,30 @@ impl Document {
             },
 
             Block::Leaf(leaf) => match leaf.category {
+                LeafCategory::AtxHeading(atx_heading_level) => {
+                    let inner_text = self.render_inlines(leaf.text);
+
+                    match atx_heading_level {
+                        AtxHeadingLevel::One => {
+                            Box::new(NormalElement::new(String::from("h1"), inner_text))
+                        }
+                        AtxHeadingLevel::Two => {
+                            Box::new(NormalElement::new(String::from("h2"), inner_text))
+                        }
+                        AtxHeadingLevel::Three => {
+                            Box::new(NormalElement::new(String::from("h3"), inner_text))
+                        }
+                        AtxHeadingLevel::Four => {
+                            Box::new(NormalElement::new(String::from("h4"), inner_text))
+                        }
+                        AtxHeadingLevel::Five => {
+                            Box::new(NormalElement::new(String::from("h5"), inner_text))
+                        }
+                        AtxHeadingLevel::Six => {
+                            Box::new(NormalElement::new(String::from("h6"), inner_text))
+                        }
+                    }
+                }
                 LeafCategory::ThematicBreak => Box::new(VoidElement::new(String::from("hr"))),
                 LeafCategory::Paragraph => Box::new(NormalElement::new(
                     String::from("p"),
