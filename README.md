@@ -1,2 +1,2 @@
 # rustdown
-A CommonMark-complaint Markdown parser, written in Rust.
+A CommonMark-compliant Markdown parser, written in Rust.
